@@ -2,9 +2,10 @@
 
 body {
   padding:50px;
-  font:14px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color:#777;
+  font: 18px/1.65 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color:#444;
   font-weight:300;
+  -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -46,7 +47,7 @@ a small {
 }
 
 .wrapper {
-  width:860px;
+  width:880px;
   margin:0 auto;
 }
 
@@ -96,12 +97,12 @@ img {
 }
 
 header {
-  width:270px;
+  width:250px;
   float:left;
   position:fixed;
 }
 
-header ul {
+header .downloads {
   list-style:none;
   height:40px;
   
@@ -121,14 +122,14 @@ header ul {
   width:270px;
 }
 
-header li {
+header .downloads li {
   width:89px;
   float:left;
   border-right:1px solid #d2d2d2;
   height:40px;
 }
 
-header ul a {
+header .downloads ul a {
   line-height:1;
   font-size:11px;
   color:#999;
@@ -143,24 +144,24 @@ strong {
   font-weight:700;
 }
 
-header ul li + li {
+header .downloads ul li + li {
   width:88px;
   border-left:1px solid #fff;
 }
 
-header ul li + li + li {
+header .downloads ul li + li + li {
   border-right:none;
   width:89px;
 }
 
-header ul a strong {
+header .downloads ul a strong {
   font-size:14px;
   display:block;
   color:#222;
 }
 
 section {
-  width:500px;
+  width:600px;
   float:right;
   padding-bottom:50px;
 }
@@ -181,6 +182,30 @@ footer {
   float:left;
   position:fixed;
   bottom:50px;
+}
+
+/** Helpers */
+
+.pull-left {
+	float: left;
+}
+
+.pull-right {
+	float: right;
+}
+
+ul.unstyled {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+ul.unstyled ul.unstyled {
+	margin-left: 2em;
+}
+
+ul.unstyled li {
+	margin: 10px 0;
 }
 
 @media print, screen and (max-width: 960px) {

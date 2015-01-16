@@ -1,0 +1,253 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Laravel 5.0 Application Structure - Kane Cohen</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+		<header>
+			<a href="/"><h1>Kane Cohen</h1></a>
+  
+			<p class="view">
+				<a href="https://github.com/KaneCohen">View My GitHub Profile</a><br />
+				<a href="http://twitter.com/kanecohen">Follow Me</a>
+			</p>
+			
+			<img src="assets/img/structure.jpg" />
+
+		</header>
+		<section>
+			<small>WRITTEN ON JAN 16, 2015</small><a class="pull-right" href="/">Home</a>
+			<h1>Laravel 5.0 Application Structure</h1>
+			
+			<p>As most of the active Laravel followers know, new version (5.0) of this growing PHP framework is
+			coming in the nearest future and even though it doesn't have any massive underlying shifts in its
+			behavior, there's enough changes to warrant bump in the major version.</p>
+
+			<p>In this blog I'd like to go over default application structure and give a short comment on every
+			directory and file - what each does and what should be stored where. I will not go over various
+			reasons for why new Laravel version has such changes, best person to ask that would be author of
+			the framework - <a href="https://twitter.com/taylorotwell">Taylor Otwell</a>. All I have to say right now is that new
+			structure definitely has its advantages that promote better workflow for medium to large applications.</p>
+			
+			<p>Keep in mind that at the time of the writing, L5 still wasn't released as beta or stable, so there might be some changes.</p>
+			
+			<h2>Root Directory</h2>
+
+			<ul class="unstyled">
+				<li id="readme-md"><strong><code>readme.md</code></strong> - General information about framework written in MarkDown, contains License, link to the documentation
+				and some other bits of information.</li>
+				
+				<li id="phpunit-xml"><strong><code>phpunit.xml</code></strong> - This file contains configuration telling <a href="https://phpunit.de/">PHPUnit</a> testing framework
+				how to run application tests - probably the most convenient way for you as a developer to write unit tests.</li>
+				
+				<li id="phpspec-yml"><strong><code>phpspec.yml</code></strong> - Similar to phpunit.xml, this file contains some configs used by <a href="`">PHPSpec</a> promoting code
+				development via specifications.</li>
+				
+				<li id="package-json"><strong><code>package.json</code></strong> - This file contains configuration used by <a href="http://nodejs.org/">node.js</a>.
+				Node.js is a platform to run JavaScript on your server - great performance and huge number of awesome tools.
+				This config file specifically will install <a href="http://gulpjs.com/">gulp.js</a> and laravel-elixir tools.<br />
+				Gulp.js - is a popular automated build tool. I will not go into details, but to put it simply it is a small command line tool, which would
+				prepare various elements of the application (usually raw assets) for testing or production purposes.<br />
+				Laravel-elixir is a tool built on top of the gulp.js. It is basically Laravel-specific build tool. More on tha could be found <a href="https://github.com/laravel/elixir">here</a>.
+				</li>
+				
+				<li id="gulpfile-js"><strong><code>gulpfile.js</code></strong> - This is a config for Gulp.js build tool mentioned above. When executed via gulp
+				this config will tell build system to create .CSS file from app.LESS file located in <code>resources/assets/less/</code> directory.</li>
+				
+				<li id="composer.json"><strong><code>composer.json</code></strong> - This should be familiar to anyone who used Laravel before. But in case if it's new for you -
+				this is a config file for <a href="https://getcomposer.org/">Composer</a> dependency manager for PHP. It helps developers to load all
+				the necessary libraries and tools required for development of the applications.</li>
+				
+				<li id="artisan"><strong><code>artisan</code></strong> - That is simply a PHP file without extension. It is being used to run various Laravel-related
+				commands, such as generation of migration files, seeding database with new data, generation of auth files or tables
+				in database and so on. For full list of commands you can run `php artisan` in the root of the application.</li>
+				
+				<li id="gitignore"><strong><code>.gitignore</code></strong> - Contains list of directories or files which <a href="http://git-scm.com/">git</a >. If you don't know
+				what git is, I highly recommend learning it - it'll make you a better developer.</li>
+				
+				<li id=""gitattributes><strong><code>.gitattributes</code></strong> - Another git-related config file. Handles text normalization in git.</li>
+				
+				<li id="env-example"><strong><code>.env.example</code></strong> - This file is fairly important. This is an example file for environment configuration
+				which is promoted way for you to handle sensitive configuration in Laravel.<br />
+				When working on an application, you'd want to create .env file which will contain <code>KEY=VALUE</code> list of configuration
+				variables such as database usernames, database passwords, social network tokens, secrets and so on. This .env file
+				is explicitly set to be ignored in the mentioned above .gitignore file. What it means is that you as a developer can
+				(and should) store sensitive information in this file, so that it won't be leaked when you publish your application on
+				github or send to the customer or simply push to the main repository as a part of development team.<br />
+				More on this in the future, meanwhile you can check google for other blogs describing this feature in more details.</li>
+
+				<li id="tests"><strong><code>tests/</code></strong> - Here you'll put any test files written for your application. Nothing new here. Previously is
+				has been located inside of the <code>app</code> directory.</li>
+				
+				<li id="storage"><strong><code>storage/</code></strong> - This directory contains <code>logs</code> directory where you'll go any time you need to check
+				you logs, it also contains framework-specific dirs, where Laravel will store cached views, sessions and data if caching
+				strategy in config is set to filesystem. Highly recommend checking this folder permissions - web server should have
+				read/write rights for this directory and everything inside. Previously is has been located inside of the <code>app</code>
+				directory. This trend will continue - a lot of directories previously located in the <code>app</code> were moved into the root.</li>
+				
+				<li id="resources"><strong><code>resources/</code></strong> - That directory is where you'll keep all of your applications-related resources.
+				Namely: views (blade templates), language files and assets such as LESS/SCSS, JavaScript/CoffeeScrtip, sprites, maybe fonts
+				and so on. Basically, it is encouraged to store your assets here and when application is ready for production, prepare your
+				assets and move them to the public directory using mentioned above Gulp.js and Laravel Elixir (both are node.js modules).</li>
+				
+				<li id="public"><strong><code>public/</code></strong> - Pretty much standard directory which will face the internet. Usually, files in this directory will
+				be always accessible to the user. Processed LESS/SCSS files, CoffeeScript and other assets located in the <code>resources</code>
+				directory will be moved here when preparing application for production. Otherwise, you can create your own assets directory
+				structure here and handle all of the static resources right away without the need to install node.js if you don't want to.</li>
+				
+				<li id="database"><strong><code>database/</code></strong> - This is another directory that was moved from the <code>app</code> directory. It contains
+				<a href="http://laravel.com/docs/master/migrations">migrations and seeds</a> for your application. Besides location of the folder,
+				nothing else is changed.</li>
+				
+				<li id="config"><strong><code>config/</code></strong> - Continuing trend with moving directories into the root. Again, this is the same folder with application-related
+				configuration files for various libraries, services, databases and so on. It might be a good idea to check <code>database.php</code>
+				file "mysql" section. Here you will notice following line <code>env('DB_HOST', 'localhost'),</code>. This is a new and encouraged
+				way for you to handle sensitive data. <code>env()</code> function will look into the <code>.env</code> file if it exists and will
+				try to fetch specified data by key (or fall back to the default - second argument). This will help you to keep passwords and
+				tokens without possibility of exposing it to other people.</li>
+				
+				<li id="bootstrap"><strong><code>bootstrap/</code></strong> - This directory contains files that will autoload Laravel and all of the required libraries. In most
+				cases you don't have to touch this folder at all.</li>
+				
+				<li id="app"><strong><code>app/</code></strong> - And finally - your application folder. In here you will store all of your application-related logic.
+				Nothing but logic. As you can see, there's no configs, views or anything else. Because, as per L5 rationale - those are
+				not our application in it's pure form.</li>
+			</ul>
+			
+			<p>After you run `composer install` command you'll have  another directory - <code>vendor/</code> which will store all of the
+			required libraries and Laravel framework itself.</p>
+			
+			<h2 id="app-dir">App Directory</h2>
+				
+			<p>Now, let's look inside of the app directory - it is quite different from the Laravel 4.x that you might be familiar with.</p>
+				
+			<ul class="unstyled">
+			
+				<li id="app-commands"><strong><code>app/Commands/</code></strong> - You might recognize this directory from L4.x version of the framework, but in new version
+				it has a different purpose. In here you're supposed to store commands related to the Command Bus pattern. I won't go into
+				the detail about that, all you need to know right now is that Command Bus provides a layer of separation between your application
+				and framework + other external libraries. Plus it promotes reuse of application functionality. But, unless you're working on
+				a more or less large-ish application it is doubtful that you would want to go with this additional level of complexity for small
+				projects. For more info on commands you can check <a href="https://laracasts.com/lessons/laravel-5-commands">Taylor's video</a> or reddit
+				for the <a href="http://www.reddit.com/r/PHP/comments/29a6qz/what_am_i_missing_with_this_whole_command_bus/">discussion</a>.</li>
+				
+				<li id="app-console"><strong><code>app/Console/</code></strong> - And here's where our L4.x commands migrated. In here you'll find a <code>Kernel.php</code> file. This
+				is where you’d want to register your newly created console commands. Then there's also a <code>Commands</code> directory. This
+				is where Laravel will put command files after running <code>php artisan make:console</code>. If you've used console commands
+				previously - workflow is quite similar.</li>
+				
+				<li id="app-"><strong><code>Events/</code></strong> - Quite a self-explanatory director. In here you're advised to put your Event files. Depending on the size
+				of the application you might want to either keep files right in here or create more inner directories to separate events, so
+				it would be easier to understand and name them.</li>
+				
+				<li id="app-eceptions"><strong><code>Exceptions/</code></strong> - Same as Events. Here you're advised to put your application-related Exceptions. You can find
+				<code>Handler.php</code> file in here - any time you throw new exception it goes through this file (and it's parent class).
+				What is does is basically tells how various exceptions should be handled - should some exception be logged or not, how to render
+				thrown exception, which exceptions should not be reported.</li>
+				
+				<li id="app-handlers"><strong><code>Handlers</code></strong> - Another new directory and this one might be hard to grasp on first sight.<br />
+				Classes located in <code>app/Commands/</code> and <code>app/Events</code> are not actual commands with logic in them
+				(although, they do can contain it, but we'll skip this). Those classes actually would be so called Data Transfer Objects
+				(DTO) - they exist as a wrapper for your data that is being passed between your Controller or Console and Command/Events
+				Handlers. You're ought to store your business logic in these handlers which receive DTOs and use whatever data they transfer.
+				As you can see - that adds quite a bit of complexity to your app, but at the same time this is one of the patterns that promotes
+				Single Responsibility principle.<br />
+				So, what that means that in <code>app/Commands</code> you will store your DTO classes and in <code>app/Handlers/Commands</code>
+				you will have your handler containing your business logic.</li>
+				
+				<li id="app-http"><strong><code>Http/</code></strong> - This is where L4.x Controllers were moved and sprinkled with quite a number of goodies. In here you will
+				have all of your logic related to HTTP requests handling. Just like Console directory handles command-line commands, this one
+				will handle requests from the web.
+				
+					<ul class="unstyled">
+						<li id="app-http-controllers"><strong><code>Http/Controllers/</code></strong> - Pretty much the same as in L4.x. You have your abstract <code>Controller.php</code> which
+						is being extended by specific Controllers such as <code>HomeController.php</code> or <code>UserController.php</code>.
+						For more complex apps you might want to add more directories in here for better separation of concerns between controllers.<br />
+						In here you can also see <code>Auth</code> directory which contains two controllers that will handle user authentication and password
+						reset out of the box.</li>
+						
+						<li id="app-http-middleware"><strong><code>app/Http/Middleware</code></strong> - New folder, new name, but that's actually something you should be familiar with.
+						Middleware is a new name for filters. Out of the box it contains <code>Authenticate.php</code> middleware which checks
+						where user is logged in and if not, redirects him to the login page. And the second is <code>RedirectIfAuthenticated</code>.
+						What is does is redirects user to specified page ('/home') if user is logged in.
+						If you have experience with node.js and express framework, this must look very similar.<br />
+						Besides these two middleware classes framework has half a dozen of others, including CSRF check, middleware to encrypt cookies,
+						middleware to start a session and so on, but those are hidden in the core of the framework.</li>
+						
+						<li id="app-http-requests"><strong><code>app/Http/Requests</code></strong> - And the last directory here. Requests directory is supposed to hold FormRequests - special
+						type of classes that do validation of HTTP requests and specifically form data. I would advise checking google
+						or <a href="https://laracasts.com/series/whats-new-in-laravel-5/episodes/3">Laracasts</a> to find out in details what is
+						Form Request. But in short - it is a class that will validate user input and depending on the result of validation,
+						either returns user back to the page with the form and errors telling what's wrong or pass data to controller method
+						that was originally requested.</li>
+						
+						<li id="app-http-kernel"><strong><code>app/Http/Kernel.php</code></strong> - This file contains couple of attributes. Namely an array of all middleware classes that
+						are being run on each request. For example - VerifyCsrfToken middleware which will make sure that forms you submit are
+						not being tampered with by malicious third party. To remove middleware you simply remove the line mentioning it.<br />
+						Second parameter - <code>routeMiddleware</code>. That array contains named middleware which you might call in some routes,
+						but not in the others.</li>
+						
+						<li id="app-http-routes-php"><strong><code>app/Http/routes.php</code></strong> - this is simply a file which will hold your application routes. It's almost completely
+						the same as in L4.x - except for filters. Now, as mentioned before, they are called middleware.</li>
+					</ul>
+				
+				</li>
+				
+				<li id="app-providers"><strong><code>app/Providers</code></strong> - This directory holds your application services - same classes as you might have seen in L4.x libraries.
+				Each class here is responsible for booting certain part of the application.
+				
+					<ul class="unstyled">
+						<li id="app-providers-app"><strong><code>app/Providers/AppServiceProvider.ph</code></strong> will instantiate an app itself and will map Auth-related package called Registrar
+						to the correct contract.</li>
+						
+						<li id="app-providers-bus"><strong><code>app/Providers/BusServiceProvider.php</code></strong> is responsible for handling Command Bus dispatcher. It will also map
+						<code>app/Commands</code> and <code>app/Handlers/Commands</code> directories so it'll be aware of the files inside them.</li>
+						
+						<li id="app-providers-config"><strong><code>app/Providers/ConfigServiceProvider.php</code></strong> this is going to be very important file pretty much for everybody. Laravel 5
+							discarded previous system where packages could publish its config files into your app directory and provide default configuration
+							that could be easily changed. That one is gone. What it means is each package should define it's configuration in its ServiceProvider
+							file. Then you can access and extend this configuration in you ConfigServiceProvider.php. And after that package will access final
+							extended configuration in its <code>register()</code> method. If anybody is interested - that could be a topic for another blog post.</li>
+					</ul>
+				
+				</li>
+				
+				<li id="app-services"><strong><code>app/Services</code></strong> - In this directory you're encouraged to store your application-related Services.
+				Services here work as a layer that contains your business logic - you might feel like that is the same thing as Commands do.
+				Before, you might have used your services straight from the controller - and it is not incorrect, but in certain cases when application
+				structure is sufficiently complex you might consider using Command Bus to dispatch one of the Commands (which are DTO as you may remember)
+				which will be received by Command Handler. And only then, in the Command Handler you would call various Services and Events to handle received
+				data. You might ask why. And the reason is separation - Use of Command Bus could help to handle requests from multiple sources
+				without writing same code several times. But it comes at cost with a lot of boilerplate code. To be fair, I would not recommend
+				going overboard with Commands unless you really know what you are doing and what you need. Services, bypassing Command Bus
+				would be simpler to deal with and they would be as testable.</li>
+				
+				<li id="app-services-registrar"><strong><code>app/Services/Registrar.php</code></strong> - This is a registration service which could be an example of how you might write your
+				small-scale application. It contains two methods - one to validate user input and the other is to create new User in your database.</li>
+				
+				<li id="app-user-php"><strong><code>app/User.php</code></strong> - Last file, folks. This is nothing more but a model that you should be familiar with if you've used
+				Laravel 4.x before. For those who are new to the frameworks - this is you data persistence class. It stores information about user
+				and could be used to fetch users from database of your choice.</li>
+				
+			</ul>
+			
+			<p>Next blog will be describing often asked question of "where do I put that file?" and general application development workflow.</p>
+			        
+		</section>
+		<footer>
+        
+		</footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+  </body>
+</html>

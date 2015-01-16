@@ -1,0 +1,239 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Basics of WebRTC Peer Connections - Kane Cohen</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+		<header>
+			<a href="/"><h1>Kane Cohen</h1></a>
+  
+			<p class="view">
+				<a href="https://github.com/KaneCohen">View My GitHub Profile</a><br />
+				<a href="http://twitter.com/kanecohen">Follow Me</a>
+			</p>
+			
+			<div class="links">
+				<h3>RECENT POSTS</h3>
+				<ul class="unstyled">
+					<li><a href="laravel-5-application-structure.html">Laravel 5.0 Application Structure</a></li>
+					<li><a href="basics-of-webrtc-peer-connections.html">Basics of WebRTC Peer Connections</a></li>
+				</ul>
+			</div>
+
+		</header>
+		<section>
+			<small>WRITTEN ON FEB 11, 2014</small><a class="pull-right" href="/">Home</a>
+			<h1>Basics of WebRTC Peer Connections</h1>
+			
+			<p>Recently I’ve been working on a small video chat MitChat.com (no longer online) as a way to learn more about latest WebRTC
+			technologies such as PeerConnection (PC) allowing users to send data to other users bypassing the
+			server — basically, P2P in the browser. I’m writing this post to clear some things for myself (mainly to make
+			sure I understand PC correctly) and for those, who want to understand general idea behind PeerConnection before
+			delving deeper.</p>
+			
+			<h2>User Media</h2>
+			<p>Let’s start with media streams and how to capture them. Each browser has its own functions
+			to capture camera stream, that’s why it’d be a good idea to use tiny polyfill called <a href="http://code.google.com/p/webrtc/source/browse/trunk/samples/js/base/adapter.js?r=3905">adapter.js</a>
+			which allows us to deal with single methods instead of adding multiple browser-specific checks.</p>
+
+			<p>Adapter.js gives us several non-browser specific methods and primary one would be <code>getUserMedia()</code>.
+			That function accepts 3 arguments:</p>
+			<ul>
+				<li>Media constraints — tells the browser what do we need: only video, only audio or both. It also allows us
+				to set constraints to the size of the video** and frames per second***.</li>
+				<li>Success callback — callback function which returns us our media stream</li>
+				<li>Error callback — function that will be called in case of an error with media capture</li>
+			</ul>
+
+			<p>** — browser won’t return exact size, only closest available.<br />
+			*** — this one is only in proposed state as far as i know, so just keep in mind and don’t use it for now.</p>
+
+			<p>Set all three arguments to prevent headaches later and it’ll look like that:</p>
+
+<pre><code>// Check if getUserMedia function is available via polyfill.
+if (window.getUserMedia) {
+	// Now, th we are sure we can use it, get our stream.
+	window.getUserMedia({
+			video: true,
+			audio: true
+		}, function(stream) {
+			// Do something with the stream here.
+		}, function(err) {
+			// Handle error.
+			console.log(err);
+		}
+	);
+}</pre></code>
+
+			<h2>RTCPeerConnection</h2>
+			
+			<p>Now we’ve got our media stream and preparation stage is over. Let’s send this sucker to the other
+			browser. How does it work? Here’s a flow:</p>
+			
+			<p>
+				<img src="assets/img/flow.jpg">
+				<small>Browser icons by <a href="http://blog.artcore-illustrations.de/">Nadja Hallfahrt</a></small>
+			</p>
+			
+			<p>Ok, how about we remove some of details to show main events that we are interested in:</p>
+			
+			<img src="assets/img/flow-simple.jpg">
+
+			<p>That was picture stuff. Now let’s go over the code.</p>
+
+			<h2>Code</h2>
+			<p>Scenario: we have two users named Dag and Norb. Dag is calling Norb.</p>
+
+			<p>Previously, we received a stream from our webcam, now it’s time to send it. We start by creating
+			peer connection or <strong>pc</strong>:</p>
+
+<pre><code>var pc = new RTCPeerConnection({
+	// iceServers are used to bypass firewalls
+	// which might block our connection from user to user
+	iceServers: [
+		{url: 'stun:stun.l.google.com:19302'}
+	]
+});</pre></code>
+			
+			<p>We need to add event listeners to our peer connection (more on that in the end):</p>
+
+<pre><code>pc.onicecandidate = onAddCandidate;
+pc.onaddstream = onAddStream;
+// There're some other events, but we'll stick to these for now.</pre></code>
+
+			<p>Listeners are assigned, now add our <strong>stream</strong> that we got from getUserMedia:</p>
+
+<pre><code>pc.addStream(stream);</pre></code>
+
+			<p>We’ve prepared our PeerConnection, time to send an offer asking Norb for chat. <strong>createOffer()</strong>
+			method accepts three arguments: two callbacks and one object. First callback for successfull creation of an offer,
+			second in case of an error and third argument, an object, contains constrains describing our stream — audio/video.</p>
+
+<pre><code>pc.createOffer(function(offer) {
+	pc.setLocalDescription(offer, function() {
+		// We've successfully set description
+		// and can send offer to Norb.
+		// via AJAX or WebSocket message.
+		// Assume that webSocket is an instance of socket.io.
+		webSocket.emit('message', {
+			type: 'offer',
+			offer: offer
+		});
+	}, function(err) {
+		// Failed to set description. Handle error. 
+	});
+}, function(err) {
+	// Handle create offer error.
+}, {
+	mandatory: {  // Media constrains.
+		OfferToReceiveAudio: true,
+		OfferToReceiveVideo: true
+	}
+});</pre></code>
+			
+			</p>Server receives this offer and sends it to the other user - Norb. Norb receives Dag’s offer
+			and it’s time for him to create an answer:</p>
+
+<pre><code>// Set remote description 
+pc.setRemoteDescription(new RTCSessionDescription(offer));
+// Cool, we've set remote description.
+// Generate answer. Very similar to offer creation.
+pc.createAnswer(function(answer) {
+ pc.setLocalDescription(answer, function() {
+	 // We've successfully set description
+	 // and can send answer to Dag.
+	 // via AJAX or WebSocket message.
+	 // Assume that webSocket is an instance of socket.io.
+	 webSocket.emit('message', {
+		 type: 'answer',
+		 answer: answer
+	 });
+ }, function(err) {
+	 // Failed to set description. Handle error. 
+ });
+ 
+}, function(err) {
+	// Handle create answer error.
+}, {
+	mandatory: { // Media constrains.
+		OfferToReceiveAudio: true,
+		OfferToReceiveVideo: true
+	}
+});</pre></code>
+
+			<p>When Dag receives Norb’s answer from the server, he sets remote description too:</p>
+
+<pre><code>pc.setRemoteDescription(new RTCSessionDescription(answer));</pre></code>
+				
+			<p>We are almost done. Now all we need to do is deal with ICECandidates. But first let’s talk about what
+			that thing actually is because it’s not exactly clear from the name itself. ICE stands for the Interactive
+			Connectivity Establishment — special kind of a protocol used to establish multimedia sessions. Since ICE
+			is a protocol, Candidates are its addresses — combination of an IP and a port which will be used for data
+			streaming. Usually, there’re multiple such Candidates — for every node in the route connecting two
+			(or more) users. In other words, it’s like a roadmap with multiple roadstops telling browsers
+			how to connecto to each other.</p>
+
+			<p>Previously, when we created our first PeerConnection we’ve used following line: “stun:stun.l.google.com:19302".
+			That is a public server provided by Google which allows users to discover all required ICE Candidates even
+			if one or both of the users are sitting behind firewalls (they often prevent creation of all the required Candidates).</p>
+
+			<p>Back to working with ICECandidates. Remember, earlier we added a callback to the <strong>pc.onicecandidate</strong>? Time to work with that callback.</p>
+
+<pre><code>function onAddCandidate(event) {
+	var candidate = event.candidate;
+	// As before, we are using websocket connection to
+	// send data from one user to another.
+	webSocket.emit('message', {
+		type: 'candidate',
+		candidate: candidate
+	});
+}</pre></code>
+
+			<p>When Dag or Norb will be receiving ice candidates from the server, they’ll need to add them to their PeerConnection:</p>
+
+<pre><code>pc.addIceCandidate(new RTCIceCandidate({
+	sdpMLineIndex: candidate.sdpMLineIndex,
+	candidate: candidate.candidate
+}));</pre></code>
+
+			<p>And we are almost done. All we need to do is receive remote stream from the other user (goes both for Dag and Norb):</p>
+
+<pre><code>var videoEl = document.createElement('video');
+function onAddStream(event) {
+	// Since we are using adapter.js we can add stream
+	// like that:
+	attachMediaStream(videoEl, stream);
+	// In webkit browsers it could be done like that:  
+	// videoEl.src = webkitURL.createObjectURL(event.stream);
+}</pre></code>
+			
+			<p>That’s all! I hope this post has cleared some of the details regarding WebRTC P2P.</p>
+
+			<p>You can try video streaming:</p>
+
+			<ul>
+				<li>MitChat (no longer available) — video chat that blurs user’s stream to provide privacy and promote meaningful conversations.
+				Blur decreases slowly over time, so after some time both users will see each other clearly.</li>
+				<li><a href="https://apprtc.appspot.com/">AppRTC</a> — an experimental example by appspot. Basic video streams from one user to the other in the same room
+				(room key is in the address bar).</li>
+				<li><a href="http://cdn.peerjs.com/demo/videochat/">Peer.js</a> videochat demo based on a Peer.js library for P2P data/media streams.</li>
+			</ul>
+          
+		</section>
+		<footer>
+        
+		</footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+  </body>
+</html>
