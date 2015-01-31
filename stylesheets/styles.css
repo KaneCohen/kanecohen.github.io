@@ -184,6 +184,10 @@ footer {
   bottom:50px;
 }
 
+article {
+	margin-bottom: 3em;
+}
+
 /** Helpers */
 
 .pull-left {
