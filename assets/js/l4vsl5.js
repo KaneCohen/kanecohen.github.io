@@ -298,7 +298,7 @@ function renderChart(el, stats, width, height, margin, animation) {
 		.attr("x", width)
 		.attr("dy", "-.71em")
 		.style("text-anchor", "end")
-		.text("Rate");
+		.text("Connections/s");
 		
 	svg.append("g")
 		.attr("class", "y axis")
