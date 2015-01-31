@@ -1,0 +1,82 @@
+text {
+	font-size: 0.65em;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+	
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
+}
+
+.laravel4 {
+	stroke: #fdae61;
+	color: #fdae61;
+}
+
+.laravel5 {
+	stroke: #386cb0;
+	color: #386cb0;
+}
+
+.symfony {
+	stroke: #7fc97f;
+	color: #7fc97f;
+}
+
+.chart {
+	text-align: center;
+	position: relative;
+}
+
+.button-group {
+	display: inline-block;
+}
+
+.button-group button {
+	padding: 0.5em 0.8em;
+	float: left;
+	margin: 0;
+	border: 1px solid #1F77C2;
+	color: #1F77C2;
+	background: none;
+	outline: none;
+	cursor: pointer;
+}
+
+.button-group button.active {
+	color: #fff;
+	background: #1F77C2;
+}
+
+.button-group button:first-child {
+	border-radius: 3px 0 0 3px
+}
+
+.button-group button:last-child {
+	border-radius: 0 3px 3px 0
+}
+
+.button-group button:not(:first-child) {
+	border-left: none;
+
+}
+
+.legend {
+	position: absolute;
+	top: 80px;
+	left: 60px;
+	text-align: left;
+	font-size: 0.8em;
+}
+
+.legend ul li {
+	margin: 0;
+}

@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Benchmarks: Laravel 5 vs Laravel 4 vs Symfony 2.6</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+	<link rel="stylesheet" href="assets/css/chart.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	<script src="http://d3js.org/d3.v3.js"></script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+		<header>
+			<a href="/"><h1>Kane Cohen</h1></a>
+  
+			<p class="view">
+				<a href="https://github.com/KaneCohen">View My GitHub Profile</a><br />
+				<a href="http://twitter.com/kanecohen">Follow Me</a>
+			</p>
+			
+			<div class="links">
+				<h3>RECENT POSTS</h3>
+				<ul class="unstyled">
+					<li><a href="laravel-5-vs-laravel-4.html">Laravel 5 vs Laravel 4 vs Symfony 2.6</a></li>
+					<li><a href="laravel-5-application-structure.html">Laravel 5.0 Application Structure</a></li>
+					<li><a href="basics-of-webrtc-peer-connections.html">Basics of WebRTC Peer Connections</a></li>
+				</ul>
+			</div>
+			
+		</header>
+		<section id="content">
+			<small>WRITTEN ON JAN 30, 2015</small><a class="pull-right" href="/">Home</a>
+			<h1>Benchmarks: Laravel 5 vs Laravel 4 vs Symfony 2.6</h1>
+			
+			<p>You know those "Hello World" benchmarks that are so often could be found on the web comparing speed of execution of
+			various programming languages, frameworks written on same or different languages? This one won't be too different.</p>
+
+			<p>I've been using Lravel PHP framework for over two years now and very happy with the way it works and how fast it allows me to
+			produce working application. But its power - large collection of tools for all purposes, has effect on its speed. Laravel
+			is not the slowest framework on the market, but it's not the fastest. Which is completely acceptable for me. Plus, I think
+			that in the end, large applications built on top of the smaller and faster frameworks would slow down after you start adding all
+			the required tools that application would need.</p>
+			
+			<p>This post does not have any point to prove, nor is it a statement of anything - just a simple curiosity to benchmark
+			Laravel 4 and Laravel 5. Plus Symfony 2.6 for the perspective.</p>
+			
+			<h2>Environment</h2>
+			<p><i>Server</i></p>
+			<ul>
+				<li>Linode VPS</li>
+				<li>1GB RAM</li>
+				<li>4 vCPUs</li>
+				<li>Ubuntu 12.04.5 LTS</li>
+				<li>Linux 3.13.7</li>
+			</ul>
+			<p><i>Other</i></p>
+			<ul>
+				<li>PHP 5.5.41 with OPCache</li>
+				<li>httperf 0.9.1</li>
+				<li>Autobench 2.1.1</li>
+			</ul>
+			
+			<h2>Benchmarks</h2>
+			<p>Each test uses Autobench and httperf via it to gather statistics. Here's an example of the command:</p>
+			<pre><code>autobench --server eample.com --uri / --low_rate 20 -high_rate 100 \
+--rate_step 100 --num_conn 2000 --num_call 1 --timeout 5</code></pre>
+			<p>This command will do 5 consecutive tests on the same domain each time increasing request rate by 20. Starting request rate is 20 and maximum is set at 100.</p>
+			<p>Requests were being made from the remote Amazon EC2 instance (~67ms ping to tested server - keep that in mind when checking response time results).</p>
+			<p>Laravel 4 and Laravel 5 were using precompiled common classes to speed them up.</p>
+			
+			<h2>Results</h2>
+			
+			<p>Above each chart you can find description for this run and buttons to check different stats.</p>
+			
+			<h3>Hello World run</h3>
+			<p>Following chart shows stats for bare-bones run with 1 route in both apps, one blade layout view with one variable passed in and printed
+			within the view. Symfony uses basic AcmeDemo code and benchmarks were done against `/demo` route - very simple printing of several links.</p>
+			<div class="chart">
+				<div class="button-group" data-chart="simple">
+					<button class="active" data-type="req_rate">Requests</button>
+					<button data-type="avg_rep_rate">Replies</button>
+					<button data-type="resp_time">Time</button>
+				</div>
+				<div id="simple" class="svg-container" data-type="req_rate"></div>
+				<div class="legend">
+					<ul class="unstyled">
+						<li><span class="laravel4">●</span> Laravel 4</li>
+						<li><span class="laravel5">●</span> Laravel 5</li>
+						<li><span class="symfony">●</span> Symfony 2.6</li>
+					</ul>
+				</div>
+			</div>
+			
+			<h3>300 routes run</h3>
+			<p>Here I've added over 300 routes to each application, but requests are made to the same route.</p>
+			
+			<div class="chart">
+				<div class="button-group" data-chart="routes">
+					<button class="active" data-type="req_rate">Requests</button>
+					<button data-type="avg_rep_rate">Replies</button>
+					<button data-type="resp_time">Time</button>
+				</div>
+				<div id="routes" class="svg-container" data-type="req_rate"></div>
+				<div class="legend">
+					<ul class="unstyled">
+						<li><span class="laravel4">●</span> Laravel 4</li>
+						<li><span class="laravel5">●</span> Laravel 5</li>
+					</ul>
+				</div>
+			</div>
+			
+			<h3>300 cached routes run</h3>
+			<p>Same 300+ routes run, but in Laravel 5 I've used `php artisan route:cache` to cache routes in a filesystem.</p>
+			
+			<div class="chart">
+				<div class="button-group" data-chart="cached_routes">
+					<button class="active" data-type="req_rate">Requests</button>
+					<button data-type="avg_rep_rate">Replies</button>
+					<button data-type="resp_time">Time</button>
+				</div>
+				<div id="cached_routes" class="svg-container" data-type="req_rate"></div>
+				<div class="legend">
+					<ul class="unstyled">
+						<li><span class="laravel4">●</span> Laravel 4</li>
+						<li><span class="laravel5">●</span> Laravel 5</li>
+					</ul>
+				</div>
+			</div>
+			
+			<h3>300 cached routes run + Validation</h3>
+			<p>Another similar run, but now a little bit more complexity on the requested route. L4 controller method loads Validation Factory via DI in constructor and then runs
+			a simple validation against several rules. L5 has the same rules, but validation is done in FormRequest that is injected into the routed method.</p>
+			
+			<div class="chart">
+				<div class="button-group" data-chart="cached_routes_and_val">
+					<button class="active" data-type="req_rate">Requests</button>
+					<button data-type="avg_rep_rate">Replies</button>
+					<button data-type="resp_time">Time</button>
+				</div>
+				<div id="cached_routes_and_val" class="svg-container" data-type="req_rate"></div>
+				<div class="legend">
+					<ul class="unstyled">
+						<li><span class="laravel4">●</span> Laravel 4</li>
+						<li><span class="laravel5">●</span> Laravel 5</li>
+					</ul>
+				</div>
+			</div>
+			
+			<h2>Conclusion</h2>
+			<p>As I said - I'm not trying to prove anything whatsoever. I was curious as to how does new version of my favourite framework fares against older version and for perspective against Symfony
+			since Laravel has roots in Symfony.</p>
+			
+			<p>Got any questions or want some extra details about benchmarks? Find me <a href="https://twitter.com/KaneCohen">on twitter</a>.</p>
+		</section>
+		<footer>
+        
+		</footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+	<script src="assets/js/l4vsl5.js"></script>
+  </body>
+</html>
