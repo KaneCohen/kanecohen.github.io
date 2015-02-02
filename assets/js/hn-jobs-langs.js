@@ -414,7 +414,7 @@ function renderChart(data, width, height, margin, animate) {
 			});
 			
 		chart.arcBase = d3.svg.arc()
-			.cornerRadius(5);
+			.cornerRadius(2);
 		
 		chart.arc = d3.svg.arc()
 			.outerRadius(chart.radius * 0.8)
