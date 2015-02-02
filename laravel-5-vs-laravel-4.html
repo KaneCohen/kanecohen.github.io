@@ -70,7 +70,7 @@
 			<h2>Benchmarks</h2>
 			<p>Each test uses Autobench and httperf via it to gather statistics. Here's an example of the command:</p>
 			<pre><code>autobench --server eample.com --uri / --low_rate 20 -high_rate 100 \
---rate_step 100 --num_conn 2000 --num_call 1 --timeout 5</code></pre>
+--rate_step 20 --num_conn 2000 --num_call 1 --timeout 5</code></pre>
 			<p>This command will do 5 consecutive tests on the same domain each time increasing request rate by 20. Starting request rate is 20 and maximum is set at 100.</p>
 			<p>Requests were being made from the remote Amazon EC2 instance (~67ms ping to tested server - keep that in mind when checking response time results).</p>
 			<p>Laravel 4 and Laravel 5 were using precompiled common classes to speed them up.</p>
