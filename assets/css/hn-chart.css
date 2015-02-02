@@ -1,0 +1,82 @@
+text {
+	font-size: 0.65em;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+path.slice {
+	stroke-width:2px;
+	cursor: pointer;
+}
+
+path.slice.active {
+	stroke-width:1px;
+}
+
+polyline {
+	opacity: .5;
+	stroke: black;
+	stroke-width: 1px;
+	fill: none;
+}
+
+.chart-container {
+	text-align: center;
+}
+
+.button-group {
+	display: inline-block;
+}
+
+.button-group button {
+	padding: 0.5em 0.8em;
+	float: left;
+	margin: 0;
+	border: 1px solid #1F77C2;
+	color: #1F77C2;
+	background: none;
+	outline: none;
+	cursor: pointer;
+}
+
+.button-group button.active {
+	color: #fff;
+	background: #1F77C2;
+}
+
+.button-group button:first-child {
+	border-radius: 3px 0 0 3px
+}
+
+.button-group button:last-child {
+	border-radius: 0 3px 3px 0
+}
+
+.button-group button:not(:first-child) {
+	border-left: none;
+}
+
+#chart {
+	transition: opacity .15s;
+}
+
+.labels, .lines {
+	transition: opacity .15s;
+}
+
+#jobs li {
+	margin-bottom: 2em;
+}
+
+.badges {
+	margin-left: 1em;
+}
+
+.badge {
+	margin-left: 0.5em;
+	padding: 0.3em 0.5em;
+	font-size: 0.6em;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	background: #aaa;
+	border-radius: 3px;
+	color: #fff;
+}
