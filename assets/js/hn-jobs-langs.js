@@ -727,22 +727,24 @@ function renderRemoteJobs(val) {
 function renderJobItems(items) {
 	var el = document.getElementById('jobs');
 	el.innerHTML = '';
-	items.forEach(function(item) {
-		setTimeout(function() {
-			var html = '<li>';
-			html += '<div class="title"><a href="https://news.ycombinator.com/item?id=' + item.id + '">' + item.line + '</a></div>';
-			html += '<div class="job-meta">';
-			html += 'by <a href="https://news.ycombinator.com/user?id=' + item.by + '">' + item.by + '</a>';
-			html += '<span class="badges">'
-			item.langs.forEach(function(lang) {
-				html += '<span class="badge ' + lang + '" style="background:' +  chart.color(langNames[lang]) + '">' + langNames[lang] + '</span>';
-			});
-			html += '</span></div>';
-			html += '</li>';
-			el.innerHTML += html;
+	setTimeout(function() {
+		items.forEach(function(item) {
+			setTimeout(function() {
+				var html = '<li>';
+				html += '<div class="title"><a href="https://news.ycombinator.com/item?id=' + item.id + '">' + item.line + '</a></div>';
+				html += '<div class="job-meta">';
+				html += 'by <a href="https://news.ycombinator.com/user?id=' + item.by + '">' + item.by + '</a>';
+				html += '<span class="badges">'
+				item.langs.forEach(function(lang) {
+					html += '<span class="badge ' + lang + '" style="background:' +  chart.color(langNames[lang]) + '">' + langNames[lang] + '</span>';
+				});
+				html += '</span></div>';
+				html += '</li>';
+				el.innerHTML += html;
+			}, 0);
 		});
-
-	});
+	}, 300);
+	
 }
 
 function openSlice(el) {
