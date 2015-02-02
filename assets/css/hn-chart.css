@@ -1,10 +1,15 @@
 text {
-	font-size: 0.65em;
+	font-size: 0.6em;
+	color: rgba(0,0,0,0.6);
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 path.slice {
 	stroke-width:2px;
+	cursor: pointer;
+}
+
+text.label {
 	cursor: pointer;
 }
 
