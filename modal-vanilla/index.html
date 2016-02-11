@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modal Vaniall Demo</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <div class="container">
+      <h1 class="text-center">Modal Vanilla</h1>
+      <p>For more details about the library, please check <a href="https://github.com/KaneCohen/modal-vanilla">github</a> page.<p>
+      <div class="text-center">
+        <br />
+        <button class="js-static-modal-toggle-main btn btn-lg btn-primary" type="button">Show Me The Modal</button>
+      </div>
+      <br />
+      <h3>Static Modal</h3>
+      <p>Static Modal is used for when you manually created Modal HTML in you webpage and now just want to show it.</p>
+      <p>It works very similar to the way Bootstrap Modal works. First you create an HTML:</p>
+      <pre>
+<code>&lt;div id="static-modal" class="modal fade" tabindex="-1" role="dialog"&gt;
+  &lt;div class="modal-dialog"&gt;
+    &lt;div class="modal-content"&gt;
+      &lt;div class="modal-header"&gt;
+        &lt;button type="button" class="close" data-dismiss="modal" aria-label="Close"&gt;&lt;span aria-hidden="true"&gt;&times;&lt;/span&gt;&lt;/button&gt;
+        &lt;h4 class="modal-title"&gt;Modal title&lt;/h4&gt;
+      &lt;/div&gt;
+      &lt;div class="modal-body"&gt;
+        &lt;p&gt;One fine body&hellip;&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class="modal-footer"&gt;
+        &lt;button type="button" class="btn btn-default" data-dismiss="modal"&gt;Close&lt;/button&gt;
+        &lt;button type="button" class="btn btn-primary"&gt;Save changes&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;&lt;!-- /.modal-content --&gt;
+  &lt;/div&gt;&lt;!-- /.modal-dialog --&gt;
+&lt;/div&gt;&lt;!-- /.modal --&gt;</code></pre>
+
+      <p>After that we need to add a bit of the JavaScript which would actually show the modal. There are plans to introduce Bootrstap-like toggles.</p>
+
+      <pre>
+<code>document.querySelector('.js-static-modal-toggle')
+  .addEventListener('click', function() {
+    new Modal({el: document.getElementById('static-modal')}).show();
+  });</pre></code>
+
+      <p>Code above would attach an event listener to our button here, so that when you click it Modal will be show.</p>
+      <button class="js-static-modal-toggle btn btn-primary" type="button">Show Modal</button>
+
+      <div id="static-modal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Modal title</h4>
+            </div>
+            <div class="modal-body">
+              <p>One fine body&hellip;</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+
+      <h3>Dynamic Modal</h3>
+      <p>Besides using pre-existing HTML as a content for Modal you can dynamicallt generate Modal in JavaScript 
+  using several options.</p>
+
+      <pre>
+<code>document.querySelector('.js-dynamic-modal-toggle')
+  .addEventListener('click', function() {
+
+    // Here we create our dynamic modal
+    new Modal({
+      title: 'Hooray!'
+      content: 'My Very Dynamic Modal Content'
+    }).show();
+
+  });</pre></code>
+
+      <button class="js-dynamic-modal-toggle btn btn-primary" type="button">Show Dynamic Modal</button>
+
+
+      <h3>Modal Presets</h3>
+      <p>In addition to dynamic modal generation Modal Vanilla also contains couple of presets so that you don't need to 
+generate content manually.</p>
+      <p>Presets are: Alert and Confirm Modals. Here's how to call them:</p>
+
+      <h4>Alert</h4>
+      <pre>
+<code>document.querySelector('.js-alert-modal-toggle')
+  .addEventListener('click', function() {
+
+    // Here we create our dynamic modal
+    Modal.alert('My Custom Alert').show();
+
+  });</pre></code>
+      <button class="js-alert-modal-toggle btn btn-danger" type="button">Show Alert Modal</button>
+
+      <h4>Confirm</h4>
+      <pre>
+<code>document.querySelector('.js-confirm-modal-toggle')
+  .addEventListener('click', function() {
+
+    // Here we create our dynamic modal
+    Modal.confirm('Are you sure?').show();
+
+  });</pre></code>
+      <button class="js-confirm-modal-toggle btn btn-info" type="button">Show Confirm Modal</button>
+      <br />
+      <br />
+
+      <p>When you hit "Close" or "OK" button, modal will be closed, while it is
+      doing so it will emit "dismiss" event which you can listen to. While listening
+      you can detect which button in the confirm or alert modal was clicked and act accordingly.
+      </p>
+
+      <pre>
+<code>document.querySelector('.js-confirm-modal-toggle')
+  .addEventListener('click', function() {
+
+    // Here we create our dynamic modal
+    var confirmModal = Modal.confirm('My Custom Alert');
+    confirmModal.show().once('dismiss', function(modal, ev, button) {
+      if (button && button.value) {
+        alert("You've clicked on an OK button.");
+      }
+    });
+
+  });</pre></code>
+
+      <button class="js-confirm-event-modal-toggle btn btn-info" type="button">Show Confirm Modal With Event</button>
+
+      <br />
+      <br />
+      <br />
+
+    </div>
+    <footer style="background:#eee;padding:15px 0;">
+      <div class="container">
+        <ul class="list-inline">
+          <li><a href="https://github.com/KaneCohen/modal-vanilla">GitHub</a></li>
+          <li><a href="https://github.com/KaneCohen">Author</a></li>
+        </ul>
+        <p>Modal Vanilla is distributed under BSD-3-Clause license</p>
+      </div>
+    </footer>
+
+    <script src="js/modal.min.js"></script>
+    <script>
+      document.querySelector('.js-static-modal-toggle-main')
+        .addEventListener('click', function() {
+          new Modal({el: document.getElementById('static-modal')}).show();
+        });
+      document.querySelector('.js-static-modal-toggle')
+        .addEventListener('click', function() {
+          new Modal({el: document.getElementById('static-modal')}).show();
+        });
+
+      document.querySelector('.js-dynamic-modal-toggle')
+        .addEventListener('click', function() {
+
+          // Here we create our dynamic modal
+          new Modal({
+            title: 'Hooray!',
+            content: 'My Very Dynamic Modal Content'
+          }).show();
+
+        });
+
+      document.querySelector('.js-alert-modal-toggle')
+        .addEventListener('click', function() {
+
+          // Here we create our dynamic modal
+          Modal.alert('My Custom Alert').show();
+
+        });
+
+      document.querySelector('.js-confirm-modal-toggle')
+        .addEventListener('click', function() {
+
+          // Here we create our dynamic modal
+          Modal.confirm('Are you sure?').show();
+
+        });
+
+      document.querySelector('.js-confirm-event-modal-toggle')
+        .addEventListener('click', function() {
+
+          // Here we create our dynamic modal
+          var confirmModal = Modal.confirm('Are You Sure?');
+          confirmModal.show().once('dismiss', function(modal, ev, button) {
+            if (button && button.value) {
+              alert("You've clicked on an OK button.");
+            }
+          });
+
+        });
+
+    </script>
+  </body>
+</html>
