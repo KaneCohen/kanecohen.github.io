@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tokenfield Demo</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/tokenfield.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Tokenfield</h1>
+      <div class="row">
+        <div class="col-sm-12">
+          <h3>Limited Tokens</h3>
+          <p>Simple example with color names:</p>
+          <input class="js-primary form-control" placeholder="Type colors such as `red` or 'blue'" type="text" />
+          <p class="text-muted">In this example you can select up to 11 colors from
+the list: red, orange, yellow, green, blue, indigo, violet, black, white, brown, pink. You can't add your own colors.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <h3>New Tokens</h3>
+          <p>Simple example with color names and ability to add your own colors:</p>
+          <input class="js-primary-new form-control" placeholder="Type colors such as `red` or 'blue'" type="text" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <h3>Single Token</h3>
+          <p>Allows you to add only one token, either custom or one of the available colors:</p>
+          <input class="js-primary-single form-control" placeholder="Type colors such as `red` or 'blue'" type="text" />
+        </div>
+      </div>
+    </div>
+    <script src="js/tokenfield.min.js"></script>
+    <script>
+      var colors = [
+        {id: 0, name: 'red'},
+        {id: 1, name:'orange'},
+        {id: 2, name: 'yellow'},
+        {id: 3, name: 'green'},
+        {id: 4, name:'blue'},
+        {id: 5, name: 'indigo'},
+        {id: 6, name: 'violet'},
+        {id: 7, name: 'black'},
+        {id: 8, name: 'white'},
+        {id: 9, name: 'brown'},
+        {id: 10, name: 'pink'}
+      ];
+      new Tokenfield({
+        el: document.querySelector('.js-primary'),
+        items: colors,
+        newItems: false
+      });
+      new Tokenfield({
+        el: document.querySelector('.js-primary-new'),
+        items: colors
+      });
+      new Tokenfield({
+        el: document.querySelector('.js-primary-single'),
+        items: colors,
+        multiple: false
+      });
+    </script>
+  </body>
+</html>
