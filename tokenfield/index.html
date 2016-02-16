@@ -142,7 +142,7 @@ the list: red, orange, yellow, green, blue, indigo, violet, black, white, brown,
       });
       jp.on('change', function() {
         var out = JSON.stringify(serialize(jp), null, 2);
-        document.querySelector('.js-primary-new-result').textContent = out;
+        document.querySelector('.js-primary-result').textContent = out;
       });
       var jpn = new Tokenfield({
         el: document.querySelector('.js-primary-new'),
