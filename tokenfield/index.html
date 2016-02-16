@@ -20,6 +20,29 @@
           <input class="js-primary form-control" placeholder="Type colors such as `red` or 'blue'" type="text" />
           <p class="text-muted">In this example you can select up to 11 colors from
 the list: red, orange, yellow, green, blue, indigo, violet, black, white, brown, pink. You can't add your own colors.</p>
+          <br/>
+          <label>Result you'll get on form submit:</label>
+          <pre><code class="js-primary-result">Change input above to see the result.</code></pre>
+
+          <h4>How to Create:</h4>
+          <pre>
+<code>new Tokenfield({
+  el: document.querySelector('.text-input'), // Attach Tokenfield to the input element with class "text-input"
+  items: [
+    {id: 1, name: 'red'},
+    {id: 2, name:'orange'},
+    {id: 3, name: 'yellow'},
+    {id: 4, name: 'green'},
+    {id: 5, name:'blue'},
+    {id: 6, name: 'indigo'},
+    {id: 7, name: 'violet'},
+    {id: 8, name: 'black'},
+    {id: 9, name: 'white'},
+    {id: 10, name: 'brown'},
+    {id: 11, name: 'pink'}
+  ],
+  newItems: false
+});</code></pre>
         </div>
       </div>
       <div class="row">
@@ -27,6 +50,17 @@ the list: red, orange, yellow, green, blue, indigo, violet, black, white, brown,
           <h3>New Tokens</h3>
           <p>Simple example with color names and ability to add your own colors:</p>
           <input class="js-primary-new form-control" placeholder="Type colors such as `red` or 'blue'" type="text" />
+          <p class="text-muted">In this example you can select one of the predefined colors - red, blue or yellow or add any new text yourself.</p>
+          <br/>
+          <label>Result you'll get on form submit:</label>
+          <pre><code class="js-primary-new-result">Change input above to see the result.</code></pre>
+
+          <h4>How to Create:</h4>
+          <pre>
+<code>new Tokenfield({
+  el: document.querySelector('.text-input'), // Attach Tokenfield to the input element with class "text-input"
+  items: [{id: 1, name: 'red'}, {id: 2, name:'blue'}, {id: 3, name: 'yellow'}]
+});</code></pre>
         </div>
       </div>
       <div class="row">
@@ -34,11 +68,60 @@ the list: red, orange, yellow, green, blue, indigo, violet, black, white, brown,
           <h3>Single Token</h3>
           <p>Allows you to add only one token, either custom or one of the available colors:</p>
           <input class="js-primary-single form-control" placeholder="Type colors such as `red` or 'blue'" type="text" />
+          <br/>
+          <label>Result you'll get on form submit:</label>
+          <pre><code class="js-primary-single-result">Change input above to see the result.</code></pre>
         </div>
       </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <h3>Remote Autocomplete</h3>
+          <p>Fetches remote data for autocomplete:</p>
+          <input class="js-primary-remote form-control" placeholder="Type letters 'bl' s in 'blue' or 'black'" type="text" />
+          <br/>
+          <label>Result you'll get on form submit:</label>
+          <pre><code class="js-primary-remote-result">Change input above to see the result.</code></pre>
+        </div>
+      </div>
+
+      <br />
+      <br />
+      <br />
     </div>
-    <script src="js/tokenfield.min.js"></script>
+
+    <footer style="background:#eee;padding:15px 0;">
+      <div class="container">
+        <ul class="list-inline">
+          <li><a href="https://github.com/KaneCohen/tokenfield">GitHub</a></li>
+          <li><a href="https://github.com/KaneCohen">Author</a></li>
+        </ul>
+        <p>Tokenfield is distributed under BSD-3-Clause license</p>
+      </div>
+    </footer>
+    <script src="js/tokenfield.min.js?t=1"></script>
     <script>
+      function serialize(tokenfield) {
+        var items = tokenfield.getItems();
+        var prop;
+        var data = {};
+        items.forEach(function(item) {
+          if (item.isNew) {
+            prop = tokenfield._options.newItemName;
+          } else {
+            prop = tokenfield._options.itemName;
+          }
+          if (typeof data[prop] === 'undefined') {
+            data[prop] = [];
+          }
+          if (item.isNew) {
+            data[prop].push(item.name);
+          } else {
+            data[prop].push(item.id);
+          }
+        });
+        return data;
+      }
       var colors = [
         {id: 0, name: 'red'},
         {id: 1, name:'orange'},
@@ -52,19 +135,41 @@ the list: red, orange, yellow, green, blue, indigo, violet, black, white, brown,
         {id: 9, name: 'brown'},
         {id: 10, name: 'pink'}
       ];
-      new Tokenfield({
+      var jp = new Tokenfield({
         el: document.querySelector('.js-primary'),
         items: colors,
         newItems: false
       });
-      new Tokenfield({
+      jp.on('change', function() {
+        var out = JSON.stringify(serialize(jp), null, 2);
+        document.querySelector('.js-primary-new-result').textContent = out;
+      });
+      var jpn = new Tokenfield({
         el: document.querySelector('.js-primary-new'),
         items: colors
       });
-      new Tokenfield({
+      jpn.on('change', function() {
+        var out = JSON.stringify(serialize(jpn), null, 2);
+        document.querySelector('.js-primary-new-result').textContent = out;
+      });
+      var jps = new Tokenfield({
         el: document.querySelector('.js-primary-single'),
         items: colors,
         multiple: false
+      });
+      jps.on('change', function() {
+        var out = JSON.stringify(serialize(jps), null, 2);
+        document.querySelector('.js-primary-single-result').textContent = out;
+      });
+      var jpr = new Tokenfield({
+        el: document.querySelector('.js-primary-remote'),
+        remote: {
+          url: 'http://192.168.1.50:5090/git/kanecohen.github.io/tokenfield/remote.json'
+        }
+      });
+      jpr.on('change', function() {
+        var out = JSON.stringify(serialize(jpr), null, 2);
+        document.querySelector('.js-primary-remote-result').textContent = out;
       });
     </script>
     <script>
