@@ -112,7 +112,19 @@ generate content manually.</p>
   .addEventListener('click', function() {
 
     // Here we create our dynamic modal
-    Modal.confirm('Are you sure?').show();
+    var cfrm = Modal.confirm('Are you sure?');
+
+    // Listen for `hide` event.
+    cfrm.on('hide', function() {
+      alert('Triggered hide event.');
+    });
+
+    // Listen for `hidden` event.
+    cfrm.on('hidden', function() {
+      alert('Modal is hidden.');
+    });
+
+    cfrm.show();
 
   });</pre></code>
       <button class="js-confirm-modal-toggle btn btn-info" type="button">Show Confirm Modal</button>
@@ -189,7 +201,14 @@ generate content manually.</p>
         .addEventListener('click', function() {
 
           // Here we create our dynamic modal
-          Modal.confirm('Are you sure?').show();
+          var cfrm = Modal.confirm('Are you sure?');
+          cfrm.on('hide', function() {
+            alert('Triggered hide event.');
+          });
+          cfrm.on('hidden', function() {
+            alert('Modal is hidden.');
+          });
+          cfrm.show();
 
         });
 
