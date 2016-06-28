@@ -85,6 +85,28 @@ the list: red, orange, yellow, green, blue, indigo, violet, black, white, brown,
         </div>
       </div>
 
+      <div class="row">
+        <div class="col-sm-12">
+          <h3>Remote Autocomplete with data remapping</h3>
+          <p>Fetches remote data for autocomplete and renders labels in capital letters</p>
+          <input class="js-primary-remote-remap form-control" placeholder="Type letters 'bl' s in 'blue' or 'black'" type="text" />
+          <br/>
+          <label>Result you'll get on form submit:</label>
+          <pre><code class="js-primary-remote-remap-result">Change input above to see the result.</code></pre>
+          <h4>How to Create:</h4>
+          <pre>
+<code>var tokenfield = new Tokenfield({
+  el: document.querySelector('.text-input'), // Attach Tokenfield to the input element with class "text-input"
+  newItems: false
+});
+
+// Overrride helper method responsible for rendering label.
+tokenfield.renderSetItemLabel = function(item) {
+  return item.name.toUpperCase();
+}</code></pre>
+        </div>
+      </div>
+
       <br />
       <br />
       <br />
@@ -117,7 +139,7 @@ the list: red, orange, yellow, green, blue, indigo, violet, black, white, brown,
           if (item.isNew) {
             data[prop].push(item.name);
           } else {
-            data[prop].push(item.id);
+            data[prop].push(item[tokenfield._options.itemValue]);
           }
         });
         return data;
@@ -170,6 +192,19 @@ the list: red, orange, yellow, green, blue, indigo, violet, black, white, brown,
       jpr.on('change', function() {
         var out = JSON.stringify(serialize(jpr), null, 2);
         document.querySelector('.js-primary-remote-result').textContent = out;
+      });
+      var jprr = new Tokenfield({
+        el: document.querySelector('.js-primary-remote-remap'),
+        remote: {
+          url: 'https://kanecohen.github.io/tokenfield/remote.json'
+        }
+      });
+      jprr.renderSetItemLabel = function(item) {
+        return item.name.toUpperCase();
+      }
+      jprr.on('change', function() {
+        var out = JSON.stringify(serialize(jprr), null, 2);
+        document.querySelector('.js-primary-remote-remap-result').textContent = out;
       });
     </script>
     <script>
