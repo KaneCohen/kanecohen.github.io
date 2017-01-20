@@ -49,7 +49,9 @@ the list: red, orange, yellow, green, blue, indigo, violet, black, white, brown,
         <div class="col-sm-12">
           <h3>New Tokens</h3>
           <p>Simple example with color names and ability to add your own colors:</p>
-          <input class="js-primary-new form-control" placeholder="Type colors such as `red` or 'blue'" type="text" />
+          <form>
+            <input class="js-primary-new form-control" placeholder="Type colors such as `red` or 'blue'" type="text" />
+          </form>
           <p class="text-muted">In this example you can select one of the predefined colors - red, blue or yellow or add any new text yourself.</p>
           <br/>
           <label>Result you'll get on form submit:</label>
@@ -160,7 +162,8 @@ tokenfield.renderSetItemLabel = function(item) {
       var jp = new Tokenfield({
         el: document.querySelector('.js-primary'),
         items: colors,
-        newItems: false
+        newItems: false,
+        addItemOnBlur: true,
       });
       jp.on('change', function() {
         var out = JSON.stringify(serialize(jp), null, 2);
@@ -168,7 +171,15 @@ tokenfield.renderSetItemLabel = function(item) {
       });
       var jpn = new Tokenfield({
         el: document.querySelector('.js-primary-new'),
-        items: colors
+        items: colors,
+        form: document.querySelector('form'),
+        addItemOnBlur: true,
+        addItemsOnPaste: true,
+        delimiters: [',', ' '],
+        setItems: [
+          {id: 1, name: 'red'},
+          {id: 2, name: 'orange'}
+        ],
       });
       jpn.on('change', function() {
         var out = JSON.stringify(serialize(jpn), null, 2);
@@ -177,6 +188,8 @@ tokenfield.renderSetItemLabel = function(item) {
       var jps = new Tokenfield({
         el: document.querySelector('.js-primary-single'),
         items: colors,
+        addItemOnBlur: true,
+        addItemsOnPaste: true,
         multiple: false
       });
       jps.on('change', function() {
@@ -185,6 +198,7 @@ tokenfield.renderSetItemLabel = function(item) {
       });
       var jpr = new Tokenfield({
         el: document.querySelector('.js-primary-remote'),
+        addItemOnBlur: true,
         remote: {
           url: 'https://kanecohen.github.io/tokenfield/remote.json'
         }
