@@ -148,10 +148,10 @@ tokenfield.renderSetItemLabel = function(item) {
       }
       var colors = [
         {id: 1, name: 'red'},
-        {id: 2, name:'orange'},
+        {id: 2, name: 'orange'},
         {id: 3, name: 'yellow'},
         {id: 4, name: 'green'},
-        {id: 5, name:'blue'},
+        {id: 5, name: 'blue'},
         {id: 6, name: 'indigo'},
         {id: 7, name: 'violet'},
         {id: 8, name: 'black'},
@@ -176,11 +176,13 @@ tokenfield.renderSetItemLabel = function(item) {
         addItemOnBlur: true,
         addItemsOnPaste: true,
         delimiters: [',', ' '],
-        setItems: [
-          {id: 1, name: 'red'},
-          {id: 2, name: 'orange'}
-        ],
+        minChars: 0
       });
+      jpn.setItems([
+        {id: 1, name: 'red'},
+        {id: 2, name: 'orange'},
+        {id: 3, name: 'yellow'},
+      ]);
       jpn.on('change', function() {
         var out = JSON.stringify(serialize(jpn), null, 2);
         document.querySelector('.js-primary-new-result').textContent = out;
