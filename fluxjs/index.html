@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FluxJS Demo</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/flux.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <h1>FluxJS</h1>
+      <div class="row">
+        <div class="col-sm-12">
+          FluxJS - f.lux for web. Adjust your webpage color temperature to the time of the day, making it look warmer at night and revert back during the day.
+        </div>
+      </div>
+
+      <div class="row calibration">
+        <div class="col-sm-12">
+          <h4>Calibration</h4>
+          <div class="row">
+            <div class="col-sm-6 rows-calibration">
+              <div class="blue">blue</div>
+              <div class="red">red</div>
+              <div class="blue">blue</div>
+              <div class="blue" style="background: rgba(150, 150, 0, 1)">blue custom</div>
+              <div class="red">red</div>
+              <div class="blue">blue</div>
+              <div class="red">red
+                <div class="blue">blue</div>
+                <div class="blue">blue
+                  <ul class="green">
+                    <li>green</li>
+                    <li class="blue">green</li>
+                    <li class="blue">green</li>
+                    <li>green</li>
+                  </ul>
+                </div>
+                <div class="blue">blue</div>
+                <div class="blue">blue</div>
+              </div>
+              <div class="red">red</div>
+              <div class="blue">blue</div>
+            </div>
+            <div class="col-sm-6">
+              <div class="hn-container">
+                <div class="hn-container-header">
+                  <img src="https://news.ycombinator.com/y18.gif" />
+                  <b>Hacker News</b>
+                  <span>new</span>
+                  <span class="hn-del"> | </span>
+                  <span>comments</span>
+                  <span class="hn-del"> | </span>
+                  <span>show</span>
+                  <span class="hn-del"> | </span>
+                  <span>ask</span>
+                  <span class="hn-del"> | </span>
+                  <span>jobs</span>
+                  <span class="hn-del"> | </span>
+                  <span>submit</span>
+                </div>
+                <div class="hn-list">
+                  <ul class="list-unstyled hn-stories">
+                    Fetching stories...
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row examples">
+        <div class="col-sm-12">
+          <h4>Basic Flux instance running at given user time:</h4>
+          <pre>
+<code>var flux = new Flux();
+flux.adjustTemperature();
+</code></pre>
+        </div>
+
+        <div class="col-sm-12">
+          <h4>Flux instance with specific time:</h4>
+          <p>Will result in night mode being enabled.</p>
+          <pre>
+<code>var flux = new Flux({date: new Date(2017, 6, 6, 22, 0, 0)});
+flux.adjustTemperature();
+</code></pre>
+        </div>
+
+        <div class="col-sm-12">
+          <h4>Run Flux with continuously updated time:</h4>
+          <p>Flux instance will have time updated every minute. If user browser time hits range between sunset and sunrise Flux would turn night mode and will disable it during day time.</p>
+          <pre>
+<code>var flux = new Flux();
+flux.adjustTemperature();
+setInterval(function() {
+  flux.setDate(new Date());
+  flux.adjustTemperature();
+}, 60000);
+</code></pre>
+        </div>
+
+        <div class="toast js-toast">Night mode in: <span class="js-timer">3</span></div>
+      </div>
+      <script src="https://code.jquery.com/jquery-3.2.1.min.js"   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="   crossorigin="anonymous"></script>
+      <script src="./js/flux.min.js"></script>
+      <script>
+        $(document).ready(function() {
+          $.ajax({
+            type: 'get',
+            url: 'https://hacker-news.firebaseio.com/v0/topstories.json'
+          }).done(function(response) {
+            if (response.length) {
+              var ids = response.slice(0, 5);
+              var stories = [];
+              ids.forEach(function(id, k) {
+                $.ajax({
+                  type: 'get',
+                  url: 'https://hacker-news.firebaseio.com/v0/item/' + id + '.json'
+                }).done(function(response) {
+                  stories[k] = response;
+                  if (stories.length === 5) {
+                    renderStories(stories);
+                  }
+                });
+              });
+            }
+          });
+          function getLocation(href) {
+            var match = href.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
+            return match && {
+              href: href,
+              protocol: match[1],
+              host: match[2],
+              hostname: match[3],
+              port: match[4],
+              pathname: match[5],
+              search: match[6],
+              hash: match[7]
+            }
+          }
+
+          function renderStories(stories) {
+            var list = $('.hn-stories');
+            list.empty();
+            stories.forEach(function(story, k) {
+              list.append('<div class="hn-item">' +
+                '<span class="hn-pos pull-left">' + (k+1) + '.</span>' +
+                '<div class="hn-content">' +
+                  '<div class="hn-header">' +
+                    '<span class="hn-upvote"></span>' +
+                    '<span class="hn-title">' + story.title + ' </span>' +
+                    '<span class="hn-domain">(' + getLocation(story.url).host + ')</span>' +
+                  '</div>' +
+                  '<div class="hn-footer">' +
+                    '<span class="hn-score">' + story.score + ' points </span>' +
+                    '<span class="hn-author">by ' + story.by + '</span>' +
+                    '<span class="hn-flag"> | flag</span>' +
+                    '<span class="hn-flag"> | hide </span>' +
+                    '<span class="hn-flag">' + story.descendants + ' comments</span>' +
+                  '</div>' +
+                '</div>' +
+              '</div>');
+            });
+          }
+        });
+
+        var l = new Flux({date: new Date(2017, 6, 6, 22, 0, 0)});
+        var counter = 3;
+        var t = setInterval(function() {
+          if (counter === 0) {
+            l.adjustTemperature();
+            document.querySelector('.js-toast').remove();
+            clearInterval(t);
+          } else {
+            counter--;
+            document.querySelector('.js-timer').innerHTML = counter;
+          }
+        }, 1000);
+      </script>
+    </body>
+</html>
