@@ -46,6 +46,7 @@
               <div class="red">red</div>
               <div class="blue">blue</div>
             </div>
+
             <div class="col-sm-6">
               <div class="hn-container">
                 <div class="hn-container-header">
@@ -70,6 +71,7 @@
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </div>
@@ -104,84 +106,96 @@ setInterval(function() {
 }, 60000);
 </code></pre>
         </div>
-
-        <div class="toast js-toast">Night mode in: <span class="js-timer">3</span></div>
       </div>
-      <script src="https://code.jquery.com/jquery-3.2.1.min.js"   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="   crossorigin="anonymous"></script>
-      <script src="./js/flux.min.js"></script>
-      <script>
-        $(document).ready(function() {
-          $.ajax({
-            type: 'get',
-            url: 'https://hacker-news.firebaseio.com/v0/topstories.json'
-          }).done(function(response) {
-            if (response.length) {
-              var ids = response.slice(0, 5);
-              var stories = [];
-              ids.forEach(function(id, k) {
-                $.ajax({
-                  type: 'get',
-                  url: 'https://hacker-news.firebaseio.com/v0/item/' + id + '.json'
-                }).done(function(response) {
-                  stories[k] = response;
-                  if (stories.length === 5) {
-                    renderStories(stories);
-                  }
-                });
-              });
-            }
-          });
-          function getLocation(href) {
-            var match = href.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
-            return match && {
-              href: href,
-              protocol: match[1],
-              host: match[2],
-              hostname: match[3],
-              port: match[4],
-              pathname: match[5],
-              search: match[6],
-              hash: match[7]
-            }
-          }
+    </div>
 
-          function renderStories(stories) {
-            var list = $('.hn-stories');
-            list.empty();
-            stories.forEach(function(story, k) {
-              list.append('<div class="hn-item">' +
-                '<span class="hn-pos pull-left">' + (k+1) + '.</span>' +
-                '<div class="hn-content">' +
-                  '<div class="hn-header">' +
-                    '<span class="hn-upvote"></span>' +
-                    '<span class="hn-title">' + story.title + ' </span>' +
-                    '<span class="hn-domain">(' + getLocation(story.url).host + ')</span>' +
-                  '</div>' +
-                  '<div class="hn-footer">' +
-                    '<span class="hn-score">' + story.score + ' points </span>' +
-                    '<span class="hn-author">by ' + story.by + '</span>' +
-                    '<span class="hn-flag"> | flag</span>' +
-                    '<span class="hn-flag"> | hide </span>' +
-                    '<span class="hn-flag">' + story.descendants + ' comments</span>' +
-                  '</div>' +
-                '</div>' +
-              '</div>');
+    <div class="toast js-toast">Night mode in: <span class="js-timer">3</span></div>
+
+    <footer style="background:#eee;padding:15px 0;">
+      <div class="container">
+        <ul class="list-inline">
+          <li><a href="https://github.com/KaneCohen/flux.js">GitHub</a></li>
+          <li><a href="https://github.com/KaneCohen">Author</a></li>
+        </ul>
+        <p>Tokenfield is distributed under BSD-3-Clause license</p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="   crossorigin="anonymous"></script>
+    <script src="./js/flux.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        $.ajax({
+          type: 'get',
+          url: 'https://hacker-news.firebaseio.com/v0/topstories.json'
+        }).done(function(response) {
+          if (response.length) {
+            var ids = response.slice(0, 5);
+            var stories = [];
+            ids.forEach(function(id, k) {
+              $.ajax({
+                type: 'get',
+                url: 'https://hacker-news.firebaseio.com/v0/item/' + id + '.json'
+              }).done(function(response) {
+                stories[k] = response;
+                if (stories.length === 5) {
+                  renderStories(stories);
+                }
+              });
             });
           }
         });
-
-        var l = new Flux({date: new Date(2017, 6, 6, 22, 0, 0)});
-        var counter = 3;
-        var t = setInterval(function() {
-          if (counter === 0) {
-            l.adjustTemperature();
-            document.querySelector('.js-toast').remove();
-            clearInterval(t);
-          } else {
-            counter--;
-            document.querySelector('.js-timer').innerHTML = counter;
+        function getLocation(href) {
+          var match = href.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
+          return match && {
+            href: href,
+            protocol: match[1],
+            host: match[2],
+            hostname: match[3],
+            port: match[4],
+            pathname: match[5],
+            search: match[6],
+            hash: match[7]
           }
-        }, 1000);
-      </script>
-    </body>
+        }
+
+        function renderStories(stories) {
+          var list = $('.hn-stories');
+          list.empty();
+          stories.forEach(function(story, k) {
+            list.append('<div class="hn-item">' +
+              '<span class="hn-pos pull-left">' + (k+1) + '.</span>' +
+              '<div class="hn-content">' +
+                '<div class="hn-header">' +
+                  '<span class="hn-upvote"></span>' +
+                  '<span class="hn-title">' + story.title + ' </span>' +
+                  '<span class="hn-domain">(' + getLocation(story.url).host + ')</span>' +
+                '</div>' +
+                '<div class="hn-footer">' +
+                  '<span class="hn-score">' + story.score + ' points </span>' +
+                  '<span class="hn-author">by ' + story.by + '</span>' +
+                  '<span class="hn-flag"> | flag</span>' +
+                  '<span class="hn-flag"> | hide </span>' +
+                  '<span class="hn-flag">' + story.descendants + ' comments</span>' +
+                '</div>' +
+              '</div>' +
+            '</div>');
+          });
+        }
+      });
+
+      var l = new Flux({date: new Date(2017, 6, 6, 22, 0, 0)});
+      var counter = 3;
+      var t = setInterval(function() {
+        if (counter === 0) {
+          l.adjustTemperature();
+          document.querySelector('.js-toast').remove();
+          clearInterval(t);
+        } else {
+          counter--;
+          document.querySelector('.js-timer').innerHTML = counter;
+        }
+      }, 1000);
+    </script>
+  </body>
 </html>
