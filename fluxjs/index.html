@@ -110,6 +110,7 @@ setInterval(function() {
     </div>
 
     <div class="toast js-toast">Night mode in: <span class="js-timer">3</span></div>
+    <div class="switcher js-switch" title="Switch mode">☼</div>
 
     <footer style="background:#eee;padding:15px 0;">
       <div class="container">
@@ -124,6 +125,9 @@ setInterval(function() {
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="   crossorigin="anonymous"></script>
     <script src="./js/flux.min.js"></script>
     <script>
+      var l = new Flux({date: new Date(2017, 6, 6, 22, 0, 0)});
+      var mode = 0;
+
       $(document).ready(function() {
         $.ajax({
           type: 'get',
@@ -182,13 +186,28 @@ setInterval(function() {
             '</div>');
           });
         }
+
+        $('.js-switch').on('click', function() {
+          if (mode === 0) {
+            l.setDate(new Date(2017, 6, 6, 22, 0, 0));
+            mode = 1;
+            $(this).html('☾');
+          } else {
+            l.setDate(new Date(2017, 6, 6, 15, 0, 0));
+            mode = 0;
+            $(this).html('☼');
+          }
+          l.adjustTemperature();
+        });
       });
 
-      var l = new Flux({date: new Date(2017, 6, 6, 22, 0, 0)});
       var counter = 3;
       var t = setInterval(function() {
         if (counter === 0) {
+          l.setDate(new Date(2017, 6, 6, 22, 0, 0));
           l.adjustTemperature();
+          mode = 1;
+          $('.js-switch').html('☾');
           document.querySelector('.js-toast').remove();
           clearInterval(t);
         } else {
