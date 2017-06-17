@@ -53,6 +53,7 @@ the list: red, orange, yellow, green, blue, indigo, violet, black, white, brown,
             <input class="js-primary-new form-control" placeholder="Type colors such as `red` or 'blue'" type="text" />
           </form>
           <p class="text-muted">In this example you can select one of the predefined colors - red, blue or yellow or add any new text yourself.</p>
+          <input class="form-control pull-left js-remove-item" style="width: 20%; margin-right: 8px;" placeholder="Enter item ID or name" /> <button class="btn btn-default js-remove">Remove Item</button>
           <br/>
           <label>Result you'll get on form submit:</label>
           <pre><code class="js-primary-new-result">Change input above to see the result.</code></pre>
@@ -164,6 +165,7 @@ tokenfield.renderSetItemLabel = function(item) {
         items: colors,
         newItems: false,
         addItemOnBlur: true,
+        filterSetItems: false
       });
       jp.on('change', function() {
         var out = JSON.stringify(serialize(jp), null, 2);
@@ -181,7 +183,7 @@ tokenfield.renderSetItemLabel = function(item) {
       jpn.setItems([
         {id: 1, name: 'red'},
         {id: 2, name: 'orange'},
-        {id: 3, name: 'yellow'},
+        {id: 3, name: 'yellow'}
       ]);
       jpn.on('change', function() {
         var out = JSON.stringify(serialize(jpn), null, 2);
@@ -221,6 +223,13 @@ tokenfield.renderSetItemLabel = function(item) {
       jprr.on('change', function() {
         var out = JSON.stringify(serialize(jprr), null, 2);
         document.querySelector('.js-primary-remote-remap-result').textContent = out;
+      });
+
+      document.querySelector('.js-remove').addEventListener('click', function() {
+        var val = document.querySelector('.js-remove-item').value;
+        if (val.length) {
+          jpn.removeItem(val);
+        }
       });
     </script>
     <script>

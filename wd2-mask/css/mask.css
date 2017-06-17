@@ -1,0 +1,127 @@
+.wd2-hub .main.wrapper {
+  width: 100%;
+  min-width: 1000px;
+  max-width: 1400px;
+  background: none;
+}
+
+.wd2-mask {
+  background-color: #060b0f;
+  background-image: url(../img/wd2-bg.jpg);
+  background-position: center 60px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  margin: 0;
+}
+
+.wd2-mask .wd2-main-content {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#makerContainer,
+#maskContainer {
+  margin: 0 10px;
+  padding: 4px;
+  border: 2px solid rgba(255,255,255,0.4);
+  box-sizing: border-box;
+}
+
+#makerContainer {
+  min-width: 512px;
+  min-height: 256px;
+}
+
+canvas {
+  cursor: default;
+  background: rgba(0,0,0,0.4);
+  vertical-align: middle;
+}
+
+.wd2-index {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+h1 {
+  color: #fff;
+  font-size: 32px;
+  margin: 0 0 20px 20px;
+  font-weight: bold;
+}
+
+.maskContainer-wrapper h3 {
+  margin-top: 8px;
+  text-align: center;
+}
+
+.maskContainer-wrapper h3 a {
+  color: #3ca7e4;
+}
+
+.maskContainer-wrapper h3 a:hover {
+  color: #76b3d6;
+}
+
+.makerContainer-wrapper .maker-tips {
+  padding: 20px;
+  color: rgba(255,255,255,0.6);
+}
+
+.makerContainer-wrapper .maker-tips h4 {
+  color: rgba(255,255,255,0.7);
+  font-weight: bold;
+}
+
+.makerContainer-wrapper .maker-tips li {
+  margin: 8px;
+}
+
+#maskContainer {
+  margin-right: 0;
+  min-width: 405px;
+  min-height: 500px;
+}
+
+.maskContainer-wrapper .contextPaneContainer {
+  float: right;
+  margin: 16px 0 0;
+  color: #fff;
+}
+
+.maskContainer-wrapper .contextPaneContainer button {
+  background: #191f24;
+  border: 1px solid #25272a;
+  color: #fff;
+}
+
+.wd2-hub .wd2-index .wd2-link-container {
+  margin-top: 20px;
+  color: rgba(255,255,255,0.8);
+}
+
+.wd2-hub .wd2-index .wd2-link {
+  width: 100% !important;
+  color: #fff;
+  background: #191f24;
+  border: 1px solid #25272a;
+}
+
+.wd2-contest-rules {
+  display: block;
+  margin-bottom: 8px;
+  color: #3ca7e4;
+}
+
+.wd2-contest-rules:hover {
+  color: #76b3d6;
+}
+
+.js-mask-sizes {
+  margin: 8px;
+}
