@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
     <title>Tokenfield Demo</title>
 
     <!-- Bootstrap -->
@@ -124,7 +124,7 @@ tokenfield.renderSetItemLabel = function(item) {
         <p>Tokenfield is distributed under BSD-3-Clause license</p>
       </div>
     </footer>
-    <script src="js/tokenfield.min.js?t=1"></script>
+    <script src="js/tokenfield.min.js?t=7"></script>
     <script>
       function serialize(tokenfield) {
         var items = tokenfield.getItems();
@@ -204,19 +204,39 @@ tokenfield.renderSetItemLabel = function(item) {
         el: document.querySelector('.js-primary-remote'),
         addItemOnBlur: true,
         remote: {
-          url: 'https://kanecohen.github.io/tokenfield/remote.json'
+          url: 'https://kanecohen.github.io/tokenfield/remote.json',
+          headers: {
+            'foo': 'bar',
+            'hello': function() {
+              return 'world';
+            }
+          }
         }
       });
       jpr.on('change', function() {
         var out = JSON.stringify(serialize(jpr), null, 2);
         document.querySelector('.js-primary-remote-result').textContent = out;
       });
+      jpr.remapData = function(response) {
+        console.log('foo');
+        return response;
+      }
       var jprr = new Tokenfield({
         el: document.querySelector('.js-primary-remote-remap'),
         remote: {
-          url: 'https://kanecohen.github.io/tokenfield/remote.json'
+          url: 'https://kanecohen.github.io/tokenfield/remote.json',
+          headers: {
+            'foo': 'bar',
+            'hello': function() {
+              return 'world';
+            }
+          }
         }
       });
+      jprr.remapData = function(response) {
+        console.log('bar');
+        return response;
+      }
       jprr.renderSetItemLabel = function(item) {
         return item.name.toUpperCase();
       }
