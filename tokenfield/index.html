@@ -124,10 +124,11 @@ tokenfield.renderSetItemLabel = function(item) {
         <p>Tokenfield is distributed under BSD-3-Clause license</p>
       </div>
     </footer>
-    <script src="js/tokenfield.min.js?t=7"></script>
+    <script src="js/tokenfield.min.js?t=8"></script>
     <script>
       function serialize(tokenfield) {
         var items = tokenfield.getItems();
+        console.log(items);
         var prop;
         var data = {};
         items.forEach(function(item) {
@@ -178,7 +179,10 @@ tokenfield.renderSetItemLabel = function(item) {
         addItemOnBlur: true,
         addItemsOnPaste: true,
         delimiters: [',', ' '],
-        minChars: 0
+        minChars: 0,
+        maxSuggestWindow: 5,
+        singleInput: true,
+        singleInputValue: 'name'
       });
       jpn.setItems([
         {id: 1, name: 'red'},
