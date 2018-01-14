@@ -165,6 +165,9 @@ generate content manually.</p>
 
     <script src="js/modal.min.js"></script>
     <script>
+      Modal.templates = {
+        header: '<div class="modal-header foo"></div>',
+      };
       document.querySelector('.js-static-modal-toggle-main')
         .addEventListener('click', function() {
           new Modal({el: document.getElementById('static-modal')}).show();
